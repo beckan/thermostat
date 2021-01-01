@@ -1,16 +1,20 @@
 const W1Temp = require('w1temp');
 const Gpio = require('onoff').Gpio;
 
+require('dotenv').config();
+
 const packageJSON = require('../package.json');
-const settings = require('../settings.json');
 const startApi = require('./api');
+const fs = require("fs");
 
 const getTemperatureSensor = async () => {
     const sensors = await W1Temp.getSensorsUids();
     return await W1Temp.getSensor(sensors.pop(), true, 1000, false);
 }
 
-const temperatureWatch = (temperature, settings, gpioCooler, gpioHeater) => {
+const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
+    const settings = require('../.settings.json');
+
     console.log('Current temp: ' + temperature);
 
     const heatThreshold = settings.temperature + settings.temperatureThreshold;
@@ -52,24 +56,38 @@ const onExit = (callback) => {
     process.on('uncaughtException', turnOffEverything);
 };
 
+const findSettingsFile = () => {
+    return fs.existsSync('./.settings.json');
+};
+
+const createSettingsFile = () => {
+    fs.writeFileSync('./.settings.json', JSON.stringify({
+        temperature: 20,
+        temperatureThreshold: 1
+    }));
+};
+
 const run = async () => {
     console.log(`Welcome to ${packageJSON.name} ${packageJSON.version}`);
+
+    if (!findSettingsFile()) {
+        createSettingsFile();
+    }
 
     console.log('\nGet temperature sensor');
     const temperatureSensor = await getTemperatureSensor();
 
-    const gpioCooler = new Gpio(settings.gpioCooler, 'out');
-    const gpioHeater = new Gpio(settings.gpioHeater, 'out');
+    const gpioCooler = new Gpio(process.env.GPIO_COOLER, 'out');
+    const gpioHeater = new Gpio(process.env.GPIO_HEATER, 'out');
 
     startApi({
-        settings,
         gpioCooler,
         gpioHeater,
         temperatureSensor
     });
 
     temperatureSensor.on('change', (temperature) => {
-        temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
+        temperatureWatch(temperature, gpioCooler, gpioHeater);
     });
 
     onExit(() => {
