@@ -49,15 +49,15 @@ const run = async () => {
     const gpioCooler = new Gpio(settings.gpioCooler, 'out');
     const gpioHeater = new Gpio(settings.gpioHeater, 'out');
 
-    temperatureSensor.on('change', (temperature) => {
-        temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
-    });
-
     startApi({
         settings,
         gpioCooler,
         gpioHeater,
         temperatureSensor
+    });
+
+    temperatureSensor.on('change', (temperature) => {
+        temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
     });
 
     console.log('Termostat is up and running!\n\n');
