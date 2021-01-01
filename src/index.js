@@ -60,7 +60,7 @@ const run = async () => {
         temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
     });
 
-    process.on('beforeExit', (code) => {
+    process.on('exit', (code) => {
         gpioCooler.writeSync(0);
         gpioHeater.writeSync(0);
         console.log('Process beforeExit event with code: ', code);
