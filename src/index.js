@@ -1,4 +1,5 @@
 const W1Temp = require('w1temp');
+const Gpio = require('onoff').Gpio;
 
 const packageJSON = require('../package.json');
 const settings = require('../settings.json');
@@ -8,23 +9,28 @@ const getTemperatureSensor = async () => {
     return await W1Temp.getSensor(sensors.pop(), true, 1000, false);
 }
 
-const temperatureWatch = (temperature, settings) => {
-    console.log(settings);
-    console.log(temperature);
+const temperatureWatch = (temperature, settings, gpioCooler, gpioHeater) => {
+    console.log('Current temp: ' + temperature);
 
     const heatThreshold = settings.temperature + settings.temperatureThreshold;
     const coldThreshold = settings.temperature - settings.temperatureThreshold;
 
-    let cooling = false;
-    let heating = false;
+    let cooling = gpioCooler.readSync() === 1;
+    let heating = gpioHeater.readSync() === 1;
 
     if (temperature > heatThreshold && !cooling) {
+        gpioCooler.writeSync(1);
+        gpioHeater.writeSync(0);
         console.log('to hot! Turn on cooling');
     } else if (temperature < coldThreshold && !heating) {
+        gpioCooler.writeSync(0);
+        gpioHeater.writeSync(1);
         console.log('to cold! Turn on heating!');
     } else if (cooling && temperature < temperatureTarget) {
+        gpioCooler.writeSync(0);
         console.log('turn off cooling');
     } else if (heating && temperature > temperatureTarget) {
+        gpioHeater.writeSync(0);
         console.log('turn off heating');
     } else if (temperature < heatThreshold && temperature > coldThreshold) {
         console.log('Temp in range. Take it easy :)');
@@ -39,8 +45,11 @@ const run = async () => {
     console.log('\nGet temperature sensor');
     const temperatureSensor = await getTemperatureSensor();
 
+    const gpioCooler = new Gpio(settings.gpioCooler, 'out');
+    const gpioHeater = new Gpio(settings.gpioHeater, 'out');
+
     temperatureSensor.on('change', (temperature) => {
-        temperatureWatch(temperature, settings);
+        temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
     });
 
     console.log('Termostat is up and running!\n\n');
