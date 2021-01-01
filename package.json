@@ -1,6 +1,6 @@
 {
   "name": "thermostat",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -15,6 +15,7 @@
   },
   "repository": "https://github.com/beckan/thermostat.git",
   "dependencies": {
+    "express": "^4.17.1",
     "onoff": "^6.0.1",
     "w1temp": "^4.4.1"
   }
