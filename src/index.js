@@ -60,6 +60,12 @@ const run = async () => {
         temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
     });
 
+    process.on('beforeExit', (code) => {
+        gpioCooler.writeSync(0);
+        gpioHeater.writeSync(0);
+        console.log('Process beforeExit event with code: ', code);
+    });
+
     console.log('Termostat is up and running!\n\n');
 };
 
