@@ -24,6 +24,9 @@ const printMessages = {
     },
     cool: (text) => {
         console.log(chalk.black.bgBlue(`   ${text}   `) + '\n');
+    },
+    idle: (text) => {
+        console.log(chalk.black.bgWhite(`   ${text}   `) + '\n');
     }
 };
 

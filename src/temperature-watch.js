@@ -27,7 +27,7 @@ const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
         gpioHeater.writeSync(Gpio.LOW);
         printMessage.message('Turn off heating');
     } else if (!cooling && !heating && temperature <= heatThreshold && temperature >= coldThreshold) {
-        printMessage.message('Temp in range.');
+        printMessage.idle('Idle, temperature in range.');
     } else {
         if (cooling) {
             printMessage.cool('Cooling');
