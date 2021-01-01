@@ -16,22 +16,22 @@ const temperatureWatch = (temperature, settings, gpioCooler, gpioHeater) => {
     const heatThreshold = settings.temperature + settings.temperatureThreshold;
     const coldThreshold = settings.temperature - settings.temperatureThreshold;
 
-    let cooling = gpioCooler.readSync() === 1;
-    let heating = gpioHeater.readSync() === 1;
+    let cooling = gpioCooler.readSync() === Gpio.HIGH;
+    let heating = gpioHeater.readSync() === Gpio.HIGH;
 
     if (temperature > heatThreshold && !cooling) {
-        gpioCooler.writeSync(1);
-        gpioHeater.writeSync(0);
+        gpioCooler.writeSync(Gpio.HIGH);
+        gpioHeater.writeSync(Gpio.LOW);
         console.log('to hot! Turn on cooling');
     } else if (temperature < coldThreshold && !heating) {
-        gpioCooler.writeSync(0);
-        gpioHeater.writeSync(1);
+        gpioCooler.writeSync(Gpio.LOW);
+        gpioHeater.writeSync(Gpio.HIGH);
         console.log('to cold! Turn on heating!');
     } else if (cooling && temperature < settings.temperature) {
-        gpioCooler.writeSync(0);
+        gpioCooler.writeSync(Gpio.LOW);
         console.log('turn off cooling');
     } else if (heating && temperature > settings.temperature) {
-        gpioHeater.writeSync(0);
+        gpioHeater.writeSync(Gpio.LOW);
         console.log('turn off heating');
     } else if (!cooling && !heating && temperature <= heatThreshold && temperature >= coldThreshold) {
         console.log('Temp in range. Take it easy :)');

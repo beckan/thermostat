@@ -1,4 +1,5 @@
 const express = require('express');
+const Gpio = require('onoff').Gpio;
 
 const startApi = (args) => {
     const {
@@ -14,8 +15,8 @@ const startApi = (args) => {
         try {
             res.send({
                 temperature: temperatureSensor.getTemperature(),
-                cooling: gpioCooler.readSync() === 1,
-                heating: gpioHeater.readSync() === 1,
+                cooling: gpioCooler.readSync() === Gpio.HIGH,
+                heating: gpioHeater.readSync() === Gpio.HIGH,
                 settings
             });
         } catch {
