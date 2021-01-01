@@ -1,0 +1,6 @@
+{
+  "gpioHeater": 17,
+  "gpioCooler": 27,
+  "temperature": 20,
+  "temperatureThreshold": 1
+}
