@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const fs = require("fs");
 const Gpio = require('onoff').Gpio;
 
+const packageJSON = require('../package.json');
+
 const startApi = (args) => {
     const {
         gpioCooler,
@@ -20,6 +22,7 @@ const startApi = (args) => {
 
         try {
             res.send({
+                version: packageJSON.version,
                 temperature: temperatureSensor.getTemperature(),
                 cooling: gpioCooler.readSync() === Gpio.HIGH,
                 heating: gpioHeater.readSync() === Gpio.HIGH,
