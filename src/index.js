@@ -40,6 +40,16 @@ const temperatureWatch = (temperature, settings, gpioCooler, gpioHeater) => {
     }
 };
 
+const onExit = (args) => {
+    const {gpioCooler, gpioHeater} = args;
+
+    const turnOffEverything = () => {
+        gpioCooler.writeSync(0);
+        gpioHeater.writeSync(0);
+    };
+    process.on('beforeExit', turnOffEverything);
+};
+
 const run = async () => {
     console.log(`Welcome to ${packageJSON.name} ${packageJSON.version}`);
 
@@ -60,10 +70,9 @@ const run = async () => {
         temperatureWatch(temperature, settings, gpioCooler, gpioHeater);
     });
 
-    process.on('exit', (code) => {
-        gpioCooler.writeSync(0);
-        gpioHeater.writeSync(0);
-        console.log('Process beforeExit event with code: ', code);
+    onExit({
+        gpioCooler,
+        gpioHeater
     });
 
     console.log('Termostat is up and running!\n\n');
