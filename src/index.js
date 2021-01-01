@@ -5,10 +5,11 @@ const settings = require('../settings.json');
 
 const getTemperatureSensor = async () => {
     const sensors = await W1Temp.getSensorsUids();
-    return await W1Temp.getSensor(sensors.pop(), true, 500, false);
+    return await W1Temp.getSensor(sensors.pop(), true, 1000, false);
 }
 
-const temperatureWatch = (temperature) => {
+const temperatureWatch = (temperature, settings) => {
+    console.log(settings);
     console.log(temperature);
 };
 
@@ -18,10 +19,9 @@ const run = async () => {
     console.log('\nGet temperature sensor');
     const temperatureSensor = await getTemperatureSensor();
 
-    const temperatureTarget = settings.temperature;
-    const temperatureThreshold = settings.temperatureThreshold;
-
-    temperatureSensor.on('change', temperatureWatch);
+    temperatureSensor.on('change', (temperature) => {
+        temperatureWatch(temperature, settings);
+    });
 
     console.log('Termostat is up and running!\n\n');
 };
