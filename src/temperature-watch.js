@@ -30,9 +30,9 @@ const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
         printMessage.message('Temp in range.');
     } else {
         if (cooling) {
-            printMessage.message('Cooling');
+            printMessage.cool('Cooling');
         } else if (heating) {
-            printMessage.message('Heating');
+            printMessage.heat('Heating');
         }
     }
 };

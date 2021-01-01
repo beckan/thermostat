@@ -18,6 +18,12 @@ const printMessages = {
     },
     message: (text) => {
         console.log(text + '\n');
+    },
+    heat: (text) => {
+        console.log(chalk.black.bgRed(`   ${text}   `) + '\n');
+    },
+    cool: (text) => {
+        console.log(chalk.black.bgBlue(`   ${text}   `) + '\n');
     }
 };
 
