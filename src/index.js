@@ -26,7 +26,7 @@ const run = async () => {
     const gpioCooler = new Gpio(process.env.GPIO_COOLER, 'out');
     const gpioHeater = new Gpio(process.env.GPIO_HEATER, 'out');
 
-    await startApi({
+    startApi({
         gpioCooler,
         gpioHeater,
         temperatureSensor
