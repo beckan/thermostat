@@ -47,7 +47,11 @@ const onExit = (args) => {
         gpioCooler.writeSync(0);
         gpioHeater.writeSync(0);
     };
-    process.on('beforeExit', turnOffEverything);
+    process.on('exit', turnOffEverything);
+    process.on('SIGINT', turnOffEverything);
+    process.on('SIGUSR1', turnOffEverything);
+    process.on('SIGUSR2', turnOffEverything);
+    process.on('uncaughtException', turnOffEverything);
 };
 
 const run = async () => {
