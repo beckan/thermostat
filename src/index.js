@@ -11,6 +11,26 @@ const getTemperatureSensor = async () => {
 const temperatureWatch = (temperature, settings) => {
     console.log(settings);
     console.log(temperature);
+
+    const heatThreshold = settings.temperature + settings.temperatureThreshold;
+    const coldThreshold = settings.temperature - settings.temperatureThreshold;
+
+    let cooling = false;
+    let heating = false;
+
+    if (temperature > heatThreshold && !cooling) {
+        console.log('to hot! Turn on cooling');
+    } else if (temperature < coldThreshold && !heating) {
+        console.log('to cold! Turn on heating!');
+    } else if (cooling && temperature < temperatureTarget) {
+        console.log('turn off cooling');
+    } else if (heating && temperature > temperatureTarget) {
+        console.log('turn off heating');
+    } else if (temperature < heatThreshold && temperature > coldThreshold) {
+        console.log('Temp in range. Take it easy :)');
+    } else {
+        console.log('continue');
+    }
 };
 
 const run = async () => {
