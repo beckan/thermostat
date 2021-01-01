@@ -29,6 +29,11 @@ const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
     } else if (!cooling && !heating && temperature <= heatThreshold && temperature >= coldThreshold) {
         printMessage.message('Temp in range.');
     } else {
+        if (cooling) {
+            printMessage.message('Cooling');
+        } else if (heating) {
+            printMessage.message('Heating');
+        }
     }
 };
 
