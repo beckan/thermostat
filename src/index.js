@@ -32,7 +32,7 @@ const temperatureWatch = (temperature, settings, gpioCooler, gpioHeater) => {
     } else if (heating && temperature > settings.temperature) {
         gpioHeater.writeSync(0);
         console.log('turn off heating');
-    } else if (temperature < heatThreshold && temperature > coldThreshold) {
+    } else if (!cooling && !heating && temperature < heatThreshold && temperature > coldThreshold) {
         console.log('Temp in range. Take it easy :)');
     } else {
         console.log('continue');
