@@ -15,37 +15,39 @@ const startApi = (args) => {
     app.use(bodyParser.json());
 
     app.get('/status', (req, res) => {
-        delete require.cache[require.resolve('../.settings.json')];
-        const settings = require('../.settings.json');
+        delete require.cache[require.resolve('../.config.json')];
+        const config = require('../.config.json');
 
         try {
             res.send({
                 temperature: temperatureSensor.getTemperature(),
                 cooling: gpioCooler.readSync() === Gpio.HIGH,
                 heating: gpioHeater.readSync() === Gpio.HIGH,
-                settings
+                config
             });
         } catch {
             res.sendStatus(500);
         }
     });
 
-    app.post('/settings', (req, res) => {
-        delete require.cache[require.resolve('../.settings.json')];
-        const settings = require('../.settings.json');
+    app.post('/config', (req, res) => {
+        delete require.cache[require.resolve('../.config.json')];
+        const config = require('../.config.json');
 
-        const newSettings = {
-            temperature: req.body.temperature || settings.temperature,
-            temperatureThreshold: req.body.temperatureThreshold || settings.temperatureThreshold
+        const newConfig = {
+            temperature: req.body.temperature || config.temperature,
+            temperatureThreshold: req.body.temperatureThreshold || config.temperatureThreshold
         }
 
-        fs.writeFileSync('./.settings.json', JSON.stringify(newSettings));
+        fs.writeFileSync('./.config.json', JSON.stringify(newConfig));
 
         res.send({status: 'ok'});
     });
 
-    app.listen(process.env.API_PORT, () => {
-        console.log(`API is up and running at http://localhost:${process.env.API_PORT}`)
+    return new Promise(resolve => {
+        app.listen(process.env.API_PORT, () => {
+            resolve();
+        });
     });
 };
 
