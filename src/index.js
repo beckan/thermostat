@@ -5,7 +5,7 @@ const settings = require('../settings.json');
 
 const getTemperatureSensor = async () => {
     const sensors = await W1Temp.getSensorsUids();
-    return await W1Temp.getSensor(sensors.pop(), true);
+    return await W1Temp.getSensor(sensors.pop(), true, 500, false);
 }
 
 const temperatureWatch = (temperature) => {
