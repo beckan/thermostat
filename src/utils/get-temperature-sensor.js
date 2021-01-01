@@ -1,5 +1,4 @@
 const W1Temp = require("w1temp");
-const printMessage = require("./print-message");
 
 const getTemperatureSensor = async () => {
     const sensors = await W1Temp.getSensorsUids();

@@ -26,15 +26,11 @@ const run = async () => {
     const gpioCooler = new Gpio(process.env.GPIO_COOLER, 'out');
     const gpioHeater = new Gpio(process.env.GPIO_HEATER, 'out');
 
-    printMessage.heading('Starting API');
-
     await startApi({
         gpioCooler,
         gpioHeater,
         temperatureSensor
     });
-
-    printMessage.success('[DONE]');
 
     printMessage.heading('The thermostat is up and running');
 
