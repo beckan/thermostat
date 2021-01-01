@@ -46,6 +46,8 @@ const onExit = (args) => {
     const turnOffEverything = () => {
         gpioCooler.writeSync(0);
         gpioHeater.writeSync(0);
+
+        process.exit();
     };
     process.on('exit', turnOffEverything);
     process.on('SIGINT', turnOffEverything);
