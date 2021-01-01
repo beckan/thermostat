@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require("fs");
-const printMessage = require("./utils/print-message");
 const Gpio = require('onoff').Gpio;
 
 const startApi = (args) => {
@@ -45,9 +44,10 @@ const startApi = (args) => {
         res.send({status: 'ok'});
     });
 
-    app.listen(process.env.API_PORT, () => {
-        printMessage.heading('Starting API');
-        printMessage.success('[DONE]');
+    return new Promise(resolve => {
+        app.listen(process.env.API_PORT, () => {
+            resolve();
+        });
     });
 };
 

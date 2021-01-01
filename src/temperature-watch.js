@@ -1,9 +1,10 @@
+const printMessage = require("./utils/print-message");
 const Gpio = require('onoff').Gpio;
 
 const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
-    const settings = require('../.settings.json');
+    const settings = require('../.config.json');
 
-    console.log('Current temp: ' + temperature);
+    printMessage.message('[Current temp: ' + temperature + ' deg C]');
 
     const heatThreshold = settings.temperature + settings.temperatureThreshold;
     const coldThreshold = settings.temperature - settings.temperatureThreshold;
@@ -14,21 +15,20 @@ const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
     if (temperature > heatThreshold && !cooling) {
         gpioCooler.writeSync(Gpio.HIGH);
         gpioHeater.writeSync(Gpio.LOW);
-        console.log('to hot! Turn on cooling');
+        printMessage.message('Turn on cooling');
     } else if (temperature < coldThreshold && !heating) {
         gpioCooler.writeSync(Gpio.LOW);
         gpioHeater.writeSync(Gpio.HIGH);
-        console.log('to cold! Turn on heating!');
+        printMessage.message('Turn on heating');
     } else if (cooling && temperature <= settings.temperature) {
         gpioCooler.writeSync(Gpio.LOW);
-        console.log('turn off cooling');
+        printMessage.message('Turn off cooling');
     } else if (heating && temperature >= settings.temperature) {
         gpioHeater.writeSync(Gpio.LOW);
-        console.log('turn off heating');
+        printMessage.message('Turn off heating');
     } else if (!cooling && !heating && temperature <= heatThreshold && temperature >= coldThreshold) {
-        console.log('Temp in range. Take it easy :)');
+        printMessage.message('Temp in range.');
     } else {
-        console.log('continue');
     }
 };
 

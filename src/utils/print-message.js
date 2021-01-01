@@ -15,6 +15,9 @@ const printMessages = {
     },
     error: (text) => {
         console.log(chalk.redBright(text) + '\n');
+    },
+    message: (text) => {
+        console.log(text + '\n');
     }
 };
 
