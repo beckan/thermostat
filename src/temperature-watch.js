@@ -1,7 +1,24 @@
 const printMessage = require("./utils/print-message");
 const Gpio = require('onoff').Gpio;
 
-const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
+const temperatureWatch = ({temperature, gpioCoolerLed, gpioHeaterLed, gpioCooler, gpioHeater}) => {
+    const turnOnCooling = () => {
+        gpioCooler.writeSync(Gpio.HIGH);
+        gpioCoolerLed.writeSync(Gpio.HIGH);
+    };
+    const turnOffCooling = () => {
+        gpioCooler.writeSync(Gpio.LOW);
+        gpioCoolerLed.writeSync(Gpio.LOW);
+    };
+    const turnOnHeating = () => {
+        gpioHeater.writeSync(Gpio.HIGH);
+        gpioHeaterLed.writeSync(Gpio.HIGH);
+    };
+    const turnOffHeating = () => {
+        gpioHeater.writeSync(Gpio.LOW);
+        gpioHeaterLed.writeSync(Gpio.LOW);
+    };
+
     const settings = require('../.config.json');
 
     printMessage.message('[Current temp: ' + temperature + ' deg C]');
@@ -13,18 +30,18 @@ const temperatureWatch = (temperature, gpioCooler, gpioHeater) => {
     let heating = gpioHeater.readSync() === Gpio.HIGH;
 
     if (temperature > heatThreshold && !cooling) {
-        gpioCooler.writeSync(Gpio.HIGH);
-        gpioHeater.writeSync(Gpio.LOW);
+        turnOnCooling();
+        turnOffHeating();
         printMessage.message('Turn on cooling');
     } else if (temperature < coldThreshold && !heating) {
-        gpioCooler.writeSync(Gpio.LOW);
-        gpioHeater.writeSync(Gpio.HIGH);
+        turnOffCooling();
+        turnOnHeating();
         printMessage.message('Turn on heating');
     } else if (cooling && temperature <= settings.temperature) {
-        gpioCooler.writeSync(Gpio.LOW);
+        turnOffCooling();
         printMessage.message('Turn off cooling');
     } else if (heating && temperature >= settings.temperature) {
-        gpioHeater.writeSync(Gpio.LOW);
+        turnOffHeating();
         printMessage.message('Turn off heating');
     } else if (!cooling && !heating && temperature <= heatThreshold && temperature >= coldThreshold) {
         printMessage.idle('Idle, temperature in range.');

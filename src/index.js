@@ -24,6 +24,8 @@ const run = async () => {
     printMessage.success('[DONE]');
 
     const gpioPowerLed = new Gpio(process.env.GPIO_POWER_LED, 'out');
+    const gpioCoolerLed = new Gpio(process.env.GPIO_COOLER_LED, 'out');
+    const gpioHeaterLed = new Gpio(process.env.GPIO_HEATER_LED, 'out');
     const gpioCooler = new Gpio(process.env.GPIO_COOLER, 'out');
     const gpioHeater = new Gpio(process.env.GPIO_HEATER, 'out');
 
@@ -38,7 +40,13 @@ const run = async () => {
     printMessage.success('[DONE]');
 
     temperatureSensor.on('change', (temperature) => {
-        temperatureWatch(temperature, gpioCooler, gpioHeater);
+        temperatureWatch({
+            temperature,
+            gpioCoolerLed,
+            gpioHeaterLed,
+            gpioCooler,
+            gpioHeater
+        });
     });
 
     gpioPowerLed.writeSync(Gpio.HIGH);
@@ -49,6 +57,8 @@ const run = async () => {
         gpioCooler.writeSync(Gpio.LOW);
         gpioHeater.writeSync(Gpio.LOW);
         gpioPowerLed.writeSync(Gpio.LOW);
+        gpioCoolerLed.writeSync(Gpio.LOW);
+        gpioHeaterLed.writeSync(Gpio.LOW);
     });
 };
 
