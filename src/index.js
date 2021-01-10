@@ -23,6 +23,7 @@ const run = async () => {
 
     printMessage.success('[DONE]');
 
+    const gpioPowerLed = new Gpio(process.env.GPIO_POWER_LED, 'out');
     const gpioCooler = new Gpio(process.env.GPIO_COOLER, 'out');
     const gpioHeater = new Gpio(process.env.GPIO_HEATER, 'out');
 
@@ -40,7 +41,6 @@ const run = async () => {
         temperatureWatch(temperature, gpioCooler, gpioHeater);
     });
 
-    const gpioPowerLed = new Gpio(process.env.GPIO_POWER_LED, 'out');
     gpioPowerLed.writeSync(Gpio.HIGH);
 
     printMessage.message('The thermostat is up and running');
@@ -48,6 +48,7 @@ const run = async () => {
     onApplicationExit(() => {
         gpioCooler.writeSync(Gpio.LOW);
         gpioHeater.writeSync(Gpio.LOW);
+        gpioPowerLed.writeSync(Gpio.LOW);
     });
 };
 
