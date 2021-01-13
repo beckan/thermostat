@@ -29,7 +29,9 @@ const temperatureWatch = ({temperature, gpioCoolerLed, gpioHeaterLed, gpioCooler
     let cooling = gpioCooler.readSync() === Gpio.HIGH;
     let heating = gpioHeater.readSync() === Gpio.HIGH;
 
-    if (temperature > heatThreshold && !cooling) {
+    if (temperature === false) {
+        printMessage.message('Can\'t get temperature data');
+    } else if (temperature > heatThreshold && !cooling) {
         turnOnCooling();
         turnOffHeating();
         printMessage.message('Turn on cooling');
