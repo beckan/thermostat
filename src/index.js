@@ -19,7 +19,7 @@ const run = async () => {
     }
 
     printMessage.heading('Get temperature sensor');
-    const temperatureSensor = await getTemperatureSensor();
+    const temperatureSensor = await getTemperatureSensor(process.env.TEMPERATURE_POLL_INTERVALL);
 
     printMessage.success('[DONE]');
 
