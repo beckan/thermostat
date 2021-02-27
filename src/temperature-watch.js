@@ -4,19 +4,19 @@ const Gpio = require('onoff').Gpio;
 
 const temperatureWatch = ({temperature, gpioCoolerLed, gpioHeaterLed, gpioCooler, gpioHeater}) => {
     const turnOnCooling = () => {
-        gpioCooler.writeSync(Gpio.HIGH);
+        gpioCooler.writeSync(Gpio[process.env.GPIO_COOLER_ON]);
         gpioCoolerLed.writeSync(Gpio.HIGH);
     };
     const turnOffCooling = () => {
-        gpioCooler.writeSync(Gpio.LOW);
+        gpioCooler.writeSync(Gpio[process.env.GPIO_COOLER_OFF]);
         gpioCoolerLed.writeSync(Gpio.LOW);
     };
     const turnOnHeating = () => {
-        gpioHeater.writeSync(Gpio.HIGH);
+        gpioHeater.writeSync(Gpio[process.env.GPIO_HEATER_ON]);
         gpioHeaterLed.writeSync(Gpio.HIGH);
     };
     const turnOffHeating = () => {
-        gpioHeater.writeSync(Gpio.LOW);
+        gpioHeater.writeSync(Gpio[process.env.GPIO_HEATER_OFF]);
         gpioHeaterLed.writeSync(Gpio.LOW);
     };
 
@@ -27,8 +27,8 @@ const temperatureWatch = ({temperature, gpioCoolerLed, gpioHeaterLed, gpioCooler
     const heatThreshold = settings.temperature + settings.temperatureThreshold;
     const coldThreshold = settings.temperature - settings.temperatureThreshold;
 
-    let cooling = gpioCooler.readSync() === Gpio.HIGH;
-    let heating = gpioHeater.readSync() === Gpio.HIGH;
+    let cooling = gpioCooler.readSync() === Gpio[process.env.GPIO_COOLER_ON];
+    let heating = gpioHeater.readSync() === Gpio[process.env.GPIO_HEATER_ON];
 
     if (temperature === false) {
         printMessage.message('Can\'t get temperature data');
