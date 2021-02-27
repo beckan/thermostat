@@ -29,6 +29,7 @@ const run = async () => {
     const gpioCooler = new Gpio(process.env.GPIO_COOLER, 'out');
     const gpioHeater = new Gpio(process.env.GPIO_HEATER, 'out');
 
+
     printMessage.heading('Starting API');
 
     await startApi({
@@ -62,8 +63,4 @@ const run = async () => {
     });
 };
 
-run().catch((error) => {
-    printMessage.error('[ERROR]');
-    console.log(error);
-    process.exit(1);
-});
+run();
