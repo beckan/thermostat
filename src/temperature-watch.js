@@ -1,3 +1,4 @@
+const getConfig = require("./utils/get-config");
 const printMessage = require("./utils/print-message");
 const Gpio = require('onoff').Gpio;
 
@@ -19,7 +20,7 @@ const temperatureWatch = ({temperature, gpioCoolerLed, gpioHeaterLed, gpioCooler
         gpioHeaterLed.writeSync(Gpio.LOW);
     };
 
-    const settings = require('../.config.json');
+    const settings = getConfig();
 
     printMessage.message('[Current temp: ' + temperature + ' deg C]');
 

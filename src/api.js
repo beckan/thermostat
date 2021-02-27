@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require("fs");
 const Gpio = require('onoff').Gpio;
+const getConfig = require("./utils/get-config");
 
 const packageJSON = require('../package.json');
 
@@ -17,15 +18,14 @@ const startApi = (args) => {
     app.use(bodyParser.json());
 
     app.get('/status', (req, res) => {
-        delete require.cache[require.resolve('../.config.json')];
-        const config = require('../.config.json');
+        const config = getConfig();
 
         try {
             res.send({
                 version: packageJSON.version,
                 temperature: temperatureSensor.getTemperature(),
-                cooling: gpioCooler.readSync() === Gpio.HIGH,
-                heating: gpioHeater.readSync() === Gpio.HIGH,
+                cooling: gpioCooler.readSync() === Gpio[process.env.GPIO_COOLER_ON],
+                heating: gpioHeater.readSync() === Gpio[process.env.GPIO_HEATER_ON],
                 config
             });
         } catch {
@@ -34,8 +34,7 @@ const startApi = (args) => {
     });
 
     app.post('/config', (req, res) => {
-        delete require.cache[require.resolve('../.config.json')];
-        const config = require('../.config.json');
+        const config = getConfig();
 
         const newConfig = {
             temperature: req.body.temperature || config.temperature,
