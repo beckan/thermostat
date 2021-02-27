@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require("fs");
 const Gpio = require('onoff').Gpio;
@@ -15,6 +16,7 @@ const startApi = (args) => {
 
     const app = express();
 
+    app.use(cors());
     app.use(bodyParser.json());
 
     app.get('/status', (req, res) => {
